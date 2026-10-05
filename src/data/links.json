@@ -1,5 +1,17 @@
 [
   {
+    "id": "hacker-news-muv2g4m1",
+    "url": "https://news.ycombinator.com",
+    "title": "Hacker News",
+    "description": "Y Combinator tech discussion community.",
+    "thumbnail": "/thumbnails/hacker-news-1791193643352.jpg",
+    "tags": [
+      "tech",
+      "news"
+    ],
+    "createdAt": "2026-10-05T09:47:23.353Z"
+  },
+  {
     "id": "building-beautiful-uis-muv28adw",
     "url": "https://www.youtube.com/watch?v=kCc8FmEb1nY",
     "title": "Building Beautiful UIs",
