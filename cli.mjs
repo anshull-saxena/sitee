@@ -568,8 +568,24 @@ Options:
       const { stdout } = await execAsync("vercel --prod --yes", {
         cwd: ROOT_DIR,
       });
+      // Ensure the short alias is assigned
+      try {
+        await execAsync("vercel alias set sitee-opal-delta.vercel.app ytdk.vercel.app", { cwd: ROOT_DIR });
+      } catch {}
       vercelSpinner.succeed(chalk.green("Deployed to Vercel successfully!"));
-      console.log(chalk.hex("#f5f4ef")(stdout));
+      console.log(
+        boxen(
+          chalk.bold.hex("#f5f4ef")("Live Site: ") +
+            chalk.bold.hex("#d97757")("https://ytdk.vercel.app\n") +
+            chalk.dim("Short & easily typable URL on Vercel Edge"),
+          {
+            padding: 1,
+            margin: { top: 1, bottom: 1 },
+            borderColor: "#d97757",
+            borderStyle: "round",
+          }
+        )
+      );
     } catch (err) {
       vercelSpinner.fail(chalk.red("Vercel deployment requires authentication."));
       console.log(
