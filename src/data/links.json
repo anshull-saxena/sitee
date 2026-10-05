@@ -1,0 +1,108 @@
+[
+  {
+    "id": "github-muv21az6",
+    "url": "https://github.com",
+    "title": "GitHub",
+    "description": "Where the world builds software.",
+    "thumbnail": "https://images.unsplash.com/photo-1618401471353-b98aedd04e11?auto=format&fit=crop&w=1200&q=80",
+    "tags": [
+      "code",
+      "dev"
+    ],
+    "createdAt": "2026-10-05T09:35:51.762Z"
+  },
+  {
+    "id": "nextjs-muv211jn",
+    "url": "https://nextjs.org",
+    "title": "Next.js",
+    "description": "The React framework for the Web with built-in optimizations.",
+    "thumbnail": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80",
+    "tags": [
+      "framework",
+      "react",
+      "web"
+    ],
+    "createdAt": "2026-10-05T09:35:39.539Z"
+  },
+  {
+    "id": "anthropic-research",
+    "url": "https://www.anthropic.com",
+    "title": "Anthropic AI",
+    "description": "Frontier AI research and safety lab behind Claude models, alignment benchmarks, and constitutional systems.",
+    "thumbnail": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+    "tags": [
+      "AI",
+      "Research",
+      "Frontier"
+    ],
+    "createdAt": "2026-10-01T10:00:00.000Z",
+    "featured": true
+  },
+  {
+    "id": "taste-skill",
+    "url": "https://github.com/leonxlnx/taste-skill",
+    "title": "Taste Skill",
+    "description": "Anti-slop frontend engineering skill for landing pages, design systems, and tactile web interfaces.",
+    "thumbnail": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80",
+    "tags": [
+      "Design",
+      "Frontend",
+      "Taste"
+    ],
+    "createdAt": "2026-10-02T12:30:00.000Z",
+    "featured": true
+  },
+  {
+    "id": "linear-app",
+    "url": "https://linear.app",
+    "title": "Linear",
+    "description": "Streamlined issue tracking and product development workflows engineered for high-performing software teams.",
+    "thumbnail": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+    "tags": [
+      "Productivity",
+      "Tools",
+      "Craft"
+    ],
+    "createdAt": "2026-10-03T15:20:00.000Z"
+  },
+  {
+    "id": "vercel-platform",
+    "url": "https://vercel.com",
+    "title": "Vercel",
+    "description": "The Frontend Cloud platform providing seamless edge infrastructure, preview deployments, and global routing.",
+    "thumbnail": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
+    "tags": [
+      "Cloud",
+      "Deployment",
+      "Next.js"
+    ],
+    "createdAt": "2026-10-04T08:15:00.000Z"
+  },
+  {
+    "id": "rauno-craft",
+    "url": "https://rauno.me/craft",
+    "title": "Rauno Freiberg Craft",
+    "description": "Interactive essays exploring tactile UI physics, spring kinematics, gestures, and digital materiality.",
+    "thumbnail": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+    "tags": [
+      "Craft",
+      "Interaction",
+      "Physics"
+    ],
+    "createdAt": "2026-10-04T18:45:00.000Z",
+    "featured": true
+  },
+  {
+    "id": "phosphor-icons",
+    "url": "https://phosphoricons.com",
+    "title": "Phosphor Icons",
+    "description": "A flexible, meticulously balanced icon family for interfaces, diagrams, and digital publications.",
+    "thumbnail": "https://images.unsplash.com/photo-1542744094-3a31f272c490?auto=format&fit=crop&w=1200&q=80",
+    "tags": [
+      "Design",
+      "Icons",
+      "Open Source"
+    ],
+    "createdAt": "2026-10-05T09:00:00.000Z"
+  }
+]
