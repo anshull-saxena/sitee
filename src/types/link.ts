@@ -7,4 +7,6 @@ export interface LinkItem {
   tags: string[];
   createdAt: string;
   featured?: boolean;
+  youtubeId?: string;
+  author?: string;
 }

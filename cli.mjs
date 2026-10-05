@@ -71,9 +71,34 @@ async function saveLinks(links) {
   await fs.writeFile(DATA_FILE, JSON.stringify(links, null, 2), "utf-8");
 }
 
+function parseYoutube(url) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
+}
+
+function cleanInputPath(raw) {
+  if (!raw) return "";
+  let clean = raw.trim();
+  // Strip surrounding quotes from terminal drag-and-drop
+  if (
+    (clean.startsWith('"') && clean.endsWith('"')) ||
+    (clean.startsWith("'") && clean.endsWith("'"))
+  ) {
+    clean = clean.slice(1, -1);
+  }
+  // Replace escaped spaces: "\ " -> " "
+  clean = clean.replace(/\\ /g, " ");
+  // Expand ~ to user's home directory
+  if (clean.startsWith("~")) {
+    clean = path.join(process.env.HOME || "", clean.slice(1));
+  }
+  return clean.trim();
+}
+
 // Process thumbnail input: supports URL, local file, or suggested fallback
 async function resolveThumbnail(rawInput, scrapedImg, title) {
-  const input = rawInput.trim();
+  const input = cleanInputPath(rawInput);
 
   // If user hit enter or left blank, use scraped image or fallback
   if (!input) {
@@ -85,24 +110,34 @@ async function resolveThumbnail(rawInput, scrapedImg, title) {
     return input;
   }
 
-  // Check if it's a local file path
-  // Handle ~ for user home directory
-  let localPath = input;
-  if (localPath.startsWith("~")) {
-    localPath = path.join(process.env.HOME || "", localPath.slice(1));
-  }
-  localPath = path.resolve(ROOT_DIR, localPath);
+  // Check multiple candidate locations for local files
+  const candidates = [
+    path.resolve(ROOT_DIR, input),
+    path.resolve(process.cwd(), input),
+    input,
+    path.join(process.env.HOME || "", input),
+    path.join(process.env.HOME || "", "Downloads", input),
+    path.join(process.env.HOME || "", "Desktop", input),
+  ];
 
-  if (existsSync(localPath)) {
-    const spinner = ora(chalk.dim("Processing local thumbnail...")).start();
+  const foundPath = candidates.find((p) => {
+    try {
+      return existsSync(p);
+    } catch {
+      return false;
+    }
+  });
+
+  if (foundPath && existsSync(foundPath)) {
+    const spinner = ora(chalk.dim(`Processing local thumbnail ${chalk.cyan(path.basename(foundPath))}...`)).start();
     try {
       await fs.mkdir(THUMBNAILS_DIR, { recursive: true });
-      const ext = path.extname(localPath) || ".jpg";
+      const ext = path.extname(foundPath) || ".jpg";
       const cleanSlug = slugify(title || "thumb");
       const filename = `${cleanSlug}-${Date.now()}${ext}`;
       const destPath = path.join(THUMBNAILS_DIR, filename);
 
-      await fs.copyFile(localPath, destPath);
+      await fs.copyFile(foundPath, destPath);
       spinner.succeed(
         chalk.green(`Copied local thumbnail to /public/thumbnails/${filename}`)
       );
@@ -114,13 +149,15 @@ async function resolveThumbnail(rawInput, scrapedImg, title) {
       return scrapedImg || getRandomFallback();
     }
   } else {
-    // If not found locally and not URL, check if relative to current dir
+    ora().warn(chalk.yellow(`Local file "${input}" not found. Using fallback image.`));
     return scrapedImg || getRandomFallback();
   }
 }
 
 async function scrapeMetadata(url) {
   const spinner = ora(chalk.dim(`Inspecting ${chalk.cyan(url)}...`)).start();
+  const ytId = parseYoutube(url);
+
   try {
     const { result } = await ogs({
       url,
@@ -133,18 +170,32 @@ async function scrapeMetadata(url) {
     let scrapedImg = "";
     if (result.ogImage && result.ogImage.length > 0) {
       scrapedImg = result.ogImage[0].url || "";
+    } else if (ytId) {
+      scrapedImg = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
     }
 
     return {
-      title: result.ogTitle || result.twitterTitle || "",
-      description: result.ogDescription || result.twitterDescription || "",
+      title: result.ogTitle || result.twitterTitle || (ytId ? `YouTube Video (${ytId})` : ""),
+      description: result.ogDescription || result.twitterDescription || (ytId ? "YouTube video" : ""),
       image: scrapedImg,
+      youtubeId: ytId || undefined,
+      author: result.ogSiteName || (ytId ? "YouTube" : ""),
     };
   } catch (err) {
+    if (ytId) {
+      spinner.succeed(chalk.green("YouTube video detected!"));
+      return {
+        title: "YouTube Video",
+        description: `Watch video ${ytId} on YouTube.`,
+        image: `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`,
+        youtubeId: ytId,
+        author: "YouTube",
+      };
+    }
     spinner.info(
       chalk.dim("Could not auto-extract metadata; you can enter details manually.")
     );
-    return { title: "", description: "", image: "" };
+    return { title: "", description: "", image: "", youtubeId: undefined, author: "" };
   }
 }
 
@@ -205,6 +256,8 @@ Options:
       thumbnail: finalThumb,
       tags: tags.length > 0 ? tags : ["General"],
       createdAt: new Date().toISOString(),
+      youtubeId: meta.youtubeId || undefined,
+      author: meta.author || undefined,
     };
 
     const links = await loadLinks();
@@ -305,10 +358,10 @@ Options:
     // Scrape Open Graph metadata in background
     const meta = await scrapeMetadata(cleanUrl);
 
-    // 2. Thumbnail input (as requested by user)
+    // 2. Thumbnail input (takes path or URL)
     const rawThumbnail = await clack.text({
-      message: "Thumbnail (image URL, local file path, or hit Enter to use suggested):",
-      placeholder: meta.image || "Leave blank for auto / custom path",
+      message: "Thumbnail (path to image file, URL, or hit Enter to use suggested):",
+      placeholder: meta.image || "e.g. ~/Downloads/thumb.png or image.jpg",
       initialValue: meta.image || "",
     });
 
@@ -375,6 +428,8 @@ Options:
       thumbnail: finalThumbnail,
       tags: tags.length > 0 ? tags : ["General"],
       createdAt: new Date().toISOString(),
+      youtubeId: meta.youtubeId || undefined,
+      author: meta.author || undefined,
     };
 
     links.unshift(newLink);

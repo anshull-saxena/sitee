@@ -1,5 +1,20 @@
 [
   {
+    "id": "building-beautiful-uis-muv28adw",
+    "url": "https://www.youtube.com/watch?v=kCc8FmEb1nY",
+    "title": "Building Beautiful UIs",
+    "description": "We build a Generatively Pretrained Transformer (GPT), following the paper \"Attention is All You Need\" and OpenAI's GPT-2 / GPT-3. We talk about connections t...",
+    "thumbnail": "https://i.ytimg.com/vi/kCc8FmEb1nY/maxresdefault.jpg",
+    "tags": [
+      "design",
+      "video",
+      "ui"
+    ],
+    "createdAt": "2026-10-05T09:41:17.588Z",
+    "youtubeId": "kCc8FmEb1nY",
+    "author": "YouTube"
+  },
+  {
     "id": "github-muv21az6",
     "url": "https://github.com",
     "title": "GitHub",
